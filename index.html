@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threadit - Public Community & Chat</title>
     <style>
+        /* --- CSS STYLES (Same as before) --- */
         :root {
-            --primary-color: #ff4500; /* Reddit-ish Orange */
+            --primary-color: #ff4500;
             --secondary-color: #1a1a1b;
             --background-color: #dae0e6;
             --card-bg: #ffffff;
@@ -32,12 +33,7 @@
             --shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
         body {
             background-color: var(--background-color);
@@ -48,544 +44,121 @@
             min-height: 100vh;
         }
 
-        /* Layout */
         .app-container {
             display: grid;
-            grid-template-columns: 240px 1fr 300px; /* Sidebar, Feed, Chat */
+            grid-template-columns: 240px 1fr 300px;
             gap: 24px;
             max-width: 1280px;
             width: 100%;
             padding-top: 20px;
         }
 
-        @media (max-width: 1024px) {
-            .app-container {
-                grid-template-columns: 200px 1fr;
-            }
-            .chat-sidebar {
-                display: none;
-            }
-        }
-        @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr;
-                padding: 10px;
-                gap: 10px;
-            }
-            .left-sidebar {
-                display: none;
-            }
-        }
+        @media (max-width: 1024px) { .app-container { grid-template-columns: 200px 1fr; } .chat-sidebar { display: none; } }
+        @media (max-width: 768px) { .app-container { grid-template-columns: 1fr; padding: 10px; gap: 10px; } .left-sidebar { display: none; } }
 
-        /* Sidebar Navigation */
-        .left-sidebar {
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-            padding: 12px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .nav-item:hover {
-            background-color: rgba(0,0,0,0.05);
-        }
-
-        [data-theme="dark"] .nav-item:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
+        /* Sidebar */
+        .left-sidebar { position: sticky; top: 20px; height: fit-content; padding: 12px; }
+        .nav-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; font-weight: 500; margin-bottom: 4px; }
+        .nav-item:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .nav-item:hover { background-color: rgba(255,255,255,0.1); }
 
         .create-post-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 99px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: transform 0.1s;
+            background-color: var(--primary-color); color: white; border: none; width: 100%;
+            padding: 12px; border-radius: 99px; font-weight: bold; cursor: pointer;
+            margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
-        .create-post-btn:active {
-            transform: scale(0.98);
-        }
+        /* Feed */
+        .main-feed { display: flex; flex-direction: column; gap: 16px; }
 
-        /* Main Feed */
-        .main-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .create-post-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .avatar-small {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background-color: #ddd;
-            object-fit: cover;
-        }
-
-        .post-input-area {
-            flex: 1;
-        }
-
-        .post-textarea {
-            width: 100%;
-            border: none;
-            background: transparent;
-            resize: none;
-            font-size: 1.1rem;
-            outline: none;
-            color: var(--text-main);
-            min-height: 50px;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 99px;
-            font-size: 0.9rem;
-        }
-
-        .icon-btn:hover {
-            background-color: rgba(0,0,0,0.05);
-        }
+        .create-post-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; gap: 12px; }
+        .avatar-small { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+        .post-input-area { flex: 1; }
+        .post-textarea { width: 100%; border: none; background: transparent; resize: none; font-size: 1.1rem; outline: none; color: var(--text-main); min-height: 50px; }
         
-        [data-theme="dark"] .icon-btn:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
+        .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+        .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px; font-size: 0.9rem; }
+        .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .icon-btn:hover { background-color: rgba(255,255,255,0.1); }
+        .post-btn { background-color: var(--primary-color); color: white; border: none; padding: 6px 16px; border-radius: 99px; font-weight: bold; cursor: pointer; opacity: 0.5; pointer-events: none; transition: 0.2s; }
+        .post-btn.active { opacity: 1; pointer-events: all; }
 
-        .post-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 99px;
-            font-weight: bold;
-            cursor: pointer;
-            opacity: 0.5;
-            pointer-events: none;
-            transition: 0.2s;
-        }
+        /* Post */
+        .post { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; gap: 12px; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .post-btn.active {
-            opacity: 1;
-            pointer-events: all;
-        }
+        .vote-column { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 40px; }
+        .vote-arrow { cursor: pointer; font-size: 1.2rem; color: var(--text-muted); transition: color 0.2s; }
+        .vote-arrow:hover { color: var(--text-main); }
+        .vote-arrow.upvoted { color: var(--primary-color); }
+        .vote-count { font-weight: bold; font-size: 0.9rem; }
 
-        /* Feed Post */
-        .post {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            gap: 12px;
-            animation: fadeIn 0.4s ease-out;
-        }
+        .post-content { flex: 1; }
+        .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 0.9rem; }
+        .username { font-weight: bold; color: var(--text-main); }
+        .community { color: var(--text-muted); }
+        .post-text { margin-bottom: 12px; line-height: 1.5; word-break: break-word; }
+        .post-image { width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .post-footer { display: flex; gap: 16px; }
+        .footer-action { display: flex; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-weight: 500; padding: 6px; border-radius: 4px; }
+        .footer-action:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .footer-action:hover { background-color: rgba(255,255,255,0.1); }
 
-        .vote-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            min-width: 40px;
-        }
-
-        .vote-arrow {
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-
-        .vote-arrow:hover {
-            color: var(--text-main);
-        }
-
-        .vote-arrow.upvoted {
-            color: var(--primary-color);
-        }
-
-        .vote-arrow.downvoted {
-            color: var(--blue-accent);
-        }
-
-        .vote-count {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .post-content {
-            flex: 1;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .username {
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        .community {
-            color: var(--text-muted);
-        }
-
-        .time-ago {
-            color: var(--text-muted);
-        }
-
-        .post-text {
-            margin-bottom: 12px;
-            line-height: 1.5;
-            word-break: break-word;
-        }
-
-        .post-image {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-        }
-
-        .post-footer {
-            display: flex;
-            gap: 16px;
-        }
-
-        .footer-action {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 6px;
-            border-radius: 4px;
-        }
-
-        .footer-action:hover {
-            background-color: rgba(0,0,0,0.05);
-        }
-        
-        [data-theme="dark"] .footer-action:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        /* Comments Section */
-        .comments-section {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-            display: none;
-        }
-        
-        .comments-section.open {
-            display: block;
-        }
-
-        .comment-input-wrapper {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .comment-input {
-            flex: 1;
-            border: 1px solid var(--border-color);
-            background: var(--background-color);
-            color: var(--text-main);
-            padding: 8px 12px;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        .comment-input:focus {
-            border-color: var(--blue-accent);
-            background: var(--card-bg);
-        }
-
-        .comment {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .comment-body {
-            background: rgba(0,0,0,0.03);
-            padding: 8px 12px;
-            border-radius: 8px;
-            flex: 1;
-        }
-        
-        [data-theme="dark"] .comment-body {
-            background: rgba(255,255,255,0.05);
-        }
+        /* Comments */
+        .comments-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); display: none; }
+        .comments-section.open { display: block; }
+        .comment-input-wrapper { display: flex; gap: 10px; margin-bottom: 16px; }
+        .comment-input { flex: 1; border: 1px solid var(--border-color); background: var(--background-color); color: var(--text-main); padding: 8px 12px; border-radius: 8px; outline: none; }
+        .comment { display: flex; gap: 10px; margin-bottom: 12px; }
+        .comment-body { background: rgba(0,0,0,0.03); padding: 8px 12px; border-radius: 8px; flex: 1; }
+        [data-theme="dark"] .comment-body { background: rgba(255,255,255,0.05); }
 
         /* Chat Sidebar */
-        .chat-sidebar {
-            position: sticky;
-            top: 20px;
-            height: calc(100vh - 40px);
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        .chat-sidebar { position: sticky; top: 20px; height: calc(100vh - 40px); background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-header { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .chat-list { flex: 1; overflow-y: auto; }
+        .chat-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; }
+        .chat-item:hover, .chat-item.active { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .chat-item:hover, [data-theme="dark"] .chat-item.active { background-color: rgba(255,255,255,0.05); }
+        .chat-info { flex: 1; overflow: hidden; }
+        .chat-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
+        .chat-last-msg { color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .chat-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .chat-item {
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .chat-item:hover, .chat-item.active {
-            background-color: rgba(0,0,0,0.05);
-        }
-        
-        [data-theme="dark"] .chat-item:hover, [data-theme="dark"] .chat-item.active {
-            background-color: rgba(255,255,255,0.05);
-        }
-
-        .chat-info {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .chat-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-        }
-
-        .chat-last-msg {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
+        /* Chat Window */
         .chat-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-            transform: translateY(110%);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: fixed; bottom: 20px; right: 20px; width: 350px; height: 500px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+            z-index: 1000; transform: translateY(110%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .chat-window.open {
-            transform: translateY(0);
-        }
+        .chat-window.open { transform: translateY(0); }
+        .cw-header { padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: var(--primary-color); color: white; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0; }
+        .cw-close { cursor: pointer; font-size: 1.2rem; }
+        .cw-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--chat-bg); }
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; }
+        .msg-in { align-self: flex-start; background: #e4e6eb; color: #050505; border-bottom-left-radius: 2px; }
+        [data-theme="dark"] .msg-in { background: #3a3b3c; color: white; }
+        .msg-out { align-self: flex-end; background: var(--primary-color); color: white; border-bottom-right-radius: 2px; }
+        .cw-input-area { padding: 12px; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
+        .cw-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--border-color); outline: none; background: var(--background-color); color: var(--text-main); }
+        .cw-send { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary-color); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .cw-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .cw-close {
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .cw-messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: var(--chat-bg);
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .msg-in {
-            align-self: flex-start;
-            background: #e4e6eb;
-            color: #050505;
-            border-bottom-left-radius: 2px;
-        }
-        
-        [data-theme="dark"] .msg-in {
-            background: #3a3b3c;
-            color: white;
-        }
-
-        .msg-out {
-            align-self: flex-end;
-            background: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-
-        .cw-input-area {
-            padding: 12px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 8px;
-        }
-
-        .cw-input {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            outline: none;
-            background: var(--background-color);
-            color: var(--text-main);
-        }
-
-        .cw-send {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Toast Notification */
+        /* Toast & Toggle */
         .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            opacity: 0;
-            transition: 0.3s;
-            z-index: 2000;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #333; color: white; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem;
+            opacity: 0; transition: 0.3s; z-index: 2000;
         }
-        
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        
-        /* Theme Toggle */
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
+            position: absolute; top: 20px; right: 20px; background: var(--card-bg);
+            border: 1px solid var(--border-color); padding: 8px; border-radius: 50%; cursor: pointer; z-index: 100;
         }
-
     </style>
 </head>
 <body>
 
-    <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
     </button>
@@ -593,87 +166,40 @@
     <div class="app-container">
         <!-- LEFT SIDEBAR -->
         <nav class="left-sidebar">
-            <button class="create-post-btn" onclick="focusPostInput()">
-                <span>+</span> Create Post
-            </button>
-            
+            <button class="create-post-btn" onclick="focusPostInput()"><span>+</span> Create Post</button>
             <div class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 12px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                Home
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 12px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Home
             </div>
             <div class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 12px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                Popular
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 12px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> Popular
             </div>
-            <div class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 12px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                All
-            </div>
-
-            <div style="margin-top: 20px; padding: 0 12px; font-size: 0.75rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">
-                Communities
-            </div>
-            
-            <div class="nav-item">
-                <span style="background:var(--primary-color); color:white; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:0.8rem; margin-right:12px;">t</span>
-                Technology
-            </div>
-            <div class="nav-item">
-                <span style="background:#0079D3; color:white; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:0.8rem; margin-right:12px;">g</span>
-                Gaming
-            </div>
-            <div class="nav-item">
-                <span style="background:#ff66ac; color:white; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:0.8rem; margin-right:12px;">a</span>
-                Art
-            </div>
+            <div style="margin-top: 20px; padding: 0 12px; font-size: 0.75rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Communities</div>
+            <div class="nav-item"><span style="background:var(--primary-color); color:white; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:0.8rem; margin-right:12px;">t</span> Technology</div>
+            <div class="nav-item"><span style="background:#0079D3; color:white; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:0.8rem; margin-right:12px;">g</span> Gaming</div>
         </nav>
 
         <!-- MAIN FEED -->
         <main class="main-feed">
-            <!-- Create Post Input -->
             <div class="create-post-card">
                 <img src="https://picsum.photos/seed/me/50/50" alt="User Avatar" class="avatar-small">
                 <div class="post-input-area">
                     <textarea id="mainPostInput" class="post-textarea" placeholder="What's on your mind?"></textarea>
-                    
-                    <!-- Image Preview (Hidden initially) -->
-                    <div id="imagePreviewContainer" style="display:none; margin-bottom:10px; position:relative;">
-                        <img id="imagePreview" src="" style="max-height: 200px; border-radius: 8px;">
-                        <button onclick="removeImage()" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;">&times;</button>
-                    </div>
-
                     <div class="post-actions">
-                        <div class="action-btns">
-                            <button class="icon-btn" onclick="triggerImageUpload()" title="Add Image">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                                Media
-                            </button>
-                            <input type="file" id="imageUpload" hidden accept="image/*">
-                        </div>
                         <button id="submitPostBtn" class="post-btn" onclick="createPost()">Post</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Feed Container -->
-            <div id="feedContainer">
-                <!-- Posts will be injected here via JS -->
-            </div>
+            <div id="feedContainer"></div>
         </main>
 
-        <!-- RIGHT SIDEBAR (Chat) -->
+        <!-- RIGHT SIDEBAR -->
         <aside class="chat-sidebar">
-            <div class="chat-header">
-                <span>Chats</span>
-                <span style="font-size:1.2rem; cursor:pointer;">+</span>
-            </div>
-            <div class="chat-list" id="chatList">
-                <!-- Chat items generated by JS -->
-            </div>
+            <div class="chat-header"><span>Chats</span><span style="font-size:1.2rem; cursor:pointer;">+</span></div>
+            <div class="chat-list" id="chatList"></div>
         </aside>
     </div>
 
-    <!-- CHAT WINDOW (Pop-up) -->
+    <!-- CHAT WINDOW -->
     <div class="chat-window" id="chatWindow">
         <div class="cw-header">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -682,9 +208,7 @@
             </div>
             <span class="cw-close" onclick="closeChat()">&times;</span>
         </div>
-        <div class="cw-messages" id="cwMessages">
-            <!-- Messages -->
-        </div>
+        <div class="cw-messages" id="cwMessages"></div>
         <div class="cw-input-area">
             <input type="text" id="cwInput" class="cw-input" placeholder="Aa">
             <button class="cw-send" onclick="sendMessage()">
@@ -693,115 +217,134 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast">Action Successful</div>
 
     <script>
-        // --- DATA & STATE ---
-        const currentUser = {
-            name: "You",
-            avatar: "https://picsum.photos/seed/me/50/50"
-        };
-
-        const initialPosts = [
-            {
-                id: 1,
-                user: "TechGuru",
-                avatar: "https://picsum.photos/seed/tech/50/50",
-                community: "r/Technology",
-                time: "2 hours ago",
-                content: "Just built my first mechanical keyboard! The tactile feel is amazing compared to membrane keyboards. Anyone else into custom builds? 🎹",
-                image: "https://picsum.photos/seed/keyboard/600/300",
-                likes: 142,
-                comments: [
-                    { user: "KeyMaker", text: "What switches did you go for?" },
-                    { user: "TechGuru", text: "Cherry MX Browns! Nice middle ground." }
-                ],
-                liked: false
-            },
-            {
-                id: 2,
-                user: "NatureLover",
-                avatar: "https://picsum.photos/seed/nature/50/50",
-                community: "r/EarthPorn",
-                time: "5 hours ago",
-                content: "Sunset at the mountains today. Absolutely breathtaking.",
-                image: "https://picsum.photos/seed/mountain/600/400",
-                likes: 892,
-                comments: [],
-                liked: true
-            },
-            {
-                id: 3,
-                user: "CatFanatic",
-                avatar: "https://picsum.photos/seed/cat/50/50",
-                community: "r/Aww",
-                time: "1 day ago",
-                content: "He sat on my laptop while I was working... typical.",
-                image: "https://picsum.photos/seed/kitten/600/400",
-                likes: 3400,
-                comments: [],
-                liked: false
-            }
+        // --- 1. DEFAULT DATA (Used if no storage exists) ---
+        const defaultPosts = [
+            { id: 1, user: "TechGuru", avatar: "https://picsum.photos/seed/tech/50/50", community: "r/Technology", time: "2 hours ago", content: "Just built my first mechanical keyboard! The tactile feel is amazing.", likes: 142, comments: [], liked: false },
+            { id: 2, user: "NatureLover", avatar: "https://picsum.photos/seed/nature/50/50", community: "r/EarthPorn", time: "5 hours ago", content: "Sunset at the mountains today.", likes: 892, comments: [], liked: true },
+            { id: 3, user: "CatFanatic", avatar: "https://picsum.photos/seed/cat/50/50", community: "r/Aww", time: "1 day ago", content: "He sat on my laptop while I was working...", likes: 3400, comments: [], liked: false }
         ];
 
-        const chatContacts = [
-            { id: 1, name: "Alice", avatar: "https://picsum.photos/seed/alice/50/50", lastMsg: "Hey, are you coming to the party?", messages: [
-                { from: "Alice", text: "Hey!" },
-                { from: "Me", text: "Hi Alice, what's up?" },
-                { from: "Alice", text: "Hey, are you coming to the party?" }
-            ]},
-            { id: 2, name: "Bob", avatar: "https://picsum.photos/seed/bob/50/50", lastMsg: "Did you see that game last night?", messages: [
-                { from: "Bob", text: "Did you see that game last night?" }
-            ]},
-            { id: 3, name: "Dev Team", avatar: "https://picsum.photos/seed/dev/50/50", lastMsg: "Meeting starts in 5 mins.", messages: [
-                { from: "Dev Team", text: "Please update the repo." },
-                { from: "Me", text: "On it." },
-                { from: "Dev Team", text: "Meeting starts in 5 mins." }
-            ]}
+        const defaultChats = [
+            { id: 1, name: "Alice", avatar: "https://picsum.photos/seed/alice/50/50", lastMsg: "Hey, are you coming?", messages: [{ from: "Alice", text: "Hey!" }, { from: "Me", text: "Hi Alice, what's up?" }, { from: "Alice", text: "Hey, are you coming?" }] },
+            { id: 2, name: "Bob", avatar: "https://picsum.photos/seed/bob/50/50", lastMsg: "Did you see that game?", messages: [{ from: "Bob", text: "Did you see that game?" }] },
+            { id: 3, name: "Dev Team", avatar: "https://picsum.photos/seed/dev/50/50", lastMsg: "Meeting starts in 5 mins.", messages: [{ from: "Dev Team", text: "Please update the repo." }, { from: "Me", text: "On it." }, { from: "Dev Team", text: "Meeting starts in 5 mins." }] }
         ];
 
+        let posts = [];
+        let chatContacts = [];
         let activeChatId = null;
-        let posts = [...initialPosts];
-        let currentImageFile = null; // Holds data URL of uploaded image
 
-        // --- DOM ELEMENTS ---
-        const feedContainer = document.getElementById('feedContainer');
-        const postInput = document.getElementById('mainPostInput');
-        const submitPostBtn = document.getElementById('submitPostBtn');
-        const chatListEl = document.getElementById('chatList');
-        const chatWindow = document.getElementById('chatWindow');
-        const cwMessages = document.getElementById('cwMessages');
-        const cwName = document.getElementById('cwName');
-        const cwAvatar = document.getElementById('cwAvatar');
-        const cwInput = document.getElementById('cwInput');
-        const toast = document.getElementById('toast');
-        const themeToggle = document.getElementById('themeToggle');
+        // --- 2. SAVE & LOAD FUNCTIONS (The Magic Part) ---
+        function saveData() {
+            localStorage.setItem('threadit_posts', JSON.stringify(posts));
+            localStorage.setItem('threadit_chats', JSON.stringify(chatContacts));
+        }
 
-        // --- INITIALIZATION ---
-        function init() {
-            renderFeed();
-            renderChatList();
-            setupInputListeners();
-            
-            // Dark mode check
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.setAttribute('data-theme', 'dark');
+        function loadData() {
+            const savedPosts = localStorage.getItem('threadit_posts');
+            const savedChats = localStorage.getItem('threadit_chats');
+
+            if (savedPosts) {
+                posts = JSON.parse(savedPosts);
+            } else {
+                posts = [...defaultPosts]; // Use default if first visit
+            }
+
+            if (savedChats) {
+                chatContacts = JSON.parse(savedChats);
+            } else {
+                chatContacts = [...defaultChats];
             }
         }
 
-        // --- THEME TOGGLE ---
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme');
-            if(currentTheme === 'dark') {
-                document.body.removeAttribute('data-theme');
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-            }
-        });
+        // --- 3. INITIALIZATION ---
+        function init() {
+            loadData(); // Load from storage first
+            renderFeed();
+            renderChatList();
+            setupInputListeners();
+        }
 
-        // --- FEED FUNCTIONS ---
+        // --- 4. CORE FUNCTIONS (Updated to Save) ---
+        function createPost() {
+            const content = document.getElementById('mainPostInput').value.trim();
+            if (!content) return;
+
+            const newPost = {
+                id: Date.now(),
+                user: "You",
+                avatar: "https://picsum.photos/seed/me/50/50",
+                community: "u/You",
+                time: "Just now",
+                content: content,
+                image: null,
+                likes: 0,
+                comments: [],
+                liked: false
+            };
+
+            posts.unshift(newPost);
+            document.getElementById('mainPostInput').value = '';
+            saveData(); // <--- SAVES THE CHANGE
+            renderFeed();
+            showToast("Post created!");
+        }
+
+        function toggleLike(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes = post.liked ? post.likes + 1 : post.likes - 1;
+                saveData(); // <--- SAVES THE CHANGE
+                renderFeed();
+            }
+        }
+
+        function handleCommentEnter(e, id) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-comment-${id}`);
+                const text = input.value.trim();
+                if (text) {
+                    const post = posts.find(p => p.id === id);
+                    post.comments.push({ user: "You", text: text });
+                    input.value = '';
+                    saveData(); // <--- SAVES THE CHANGE
+                    renderFeed();
+                    setTimeout(() => document.getElementById(`comments-${id}`).classList.add('open'), 0);
+                    showToast("Comment posted");
+                }
+            }
+        }
+
+        function sendMessage() {
+            const text = document.getElementById('cwInput').value.trim();
+            if (!text || !activeChatId) return;
+
+            const contact = chatContacts.find(c => c.id === activeChatId);
+            contact.messages.push({ from: "Me", text: text });
+            contact.lastMsg = "You: " + text;
+            
+            document.getElementById('cwInput').value = '';
+            saveData(); // <--- SAVES THE CHANGE
+            renderMessages(contact.messages);
+            renderChatList();
+
+            // Simulate reply
+            setTimeout(() => {
+                contact.messages.push({ from: contact.name, text: "Got it, thanks!" });
+                contact.lastMsg = "Got it, thanks!";
+                saveData(); // <--- SAVES THE CHANGE
+                if(activeChatId === contact.id) renderMessages(contact.messages);
+                renderChatList();
+            }, 1500);
+        }
+
+        // --- 5. RENDERING & UTILS (Same as before) ---
         function renderFeed() {
+            const feedContainer = document.getElementById('feedContainer');
             feedContainer.innerHTML = '';
             posts.forEach(post => {
                 const postEl = document.createElement('article');
@@ -812,46 +355,31 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="${post.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
                         </div>
                         <div class="vote-count">${post.likes}</div>
-                        <div class="vote-arrow">
-                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
+                        <div class="vote-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
                     </div>
                     <div class="post-content">
                         <div class="post-header">
                             <img src="${post.avatar}" class="avatar-small" style="width:24px; height:24px;">
                             <span class="username">${post.user}</span>
                             <span class="community">${post.community}</span>
-                            <span class="time-ago">• ${post.time}</span>
                         </div>
-                        <div class="post-text">${formatContent(post.content)}</div>
-                        ${post.image ? `<img src="${post.image}" class="post-image" loading="lazy">` : ''}
-                        
+                        <div class="post-text">${post.content}</div>
+                        ${post.image ? `<img src="${post.image}" class="post-image">` : ''}
                         <div class="post-footer">
                             <div class="footer-action" onclick="toggleComments(${post.id})">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                                ${post.comments.length} Comments
-                            </div>
-                            <div class="footer-action">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-                                Share
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> ${post.comments.length} Comments
                             </div>
                         </div>
-
                         <div class="comments-section" id="comments-${post.id}">
                             <div class="comment-input-wrapper">
-                                <img src="${currentUser.avatar}" class="avatar-small">
+                                <img src="https://picsum.photos/seed/me/50/50" class="avatar-small">
                                 <input type="text" class="comment-input" placeholder="Add a comment..." id="input-comment-${post.id}" onkeypress="handleCommentEnter(event, ${post.id})">
                             </div>
                             <div id="comments-list-${post.id}">
                                 ${post.comments.map(c => `
                                     <div class="comment">
-                                        <div style="width:32px; height:32px; background:#ccc; border-radius:50%; overflow:hidden;">
-                                            <img src="https://picsum.photos/seed/${c.user}/32/32" style="width:100%; height:100%;">
-                                        </div>
-                                        <div class="comment-body">
-                                            <span style="font-weight:bold; font-size:0.85rem;">${c.user}</span>
-                                            <p style="font-size:0.9rem; margin-top:2px;">${c.text}</p>
-                                        </div>
+                                        <div style="width:32px; height:32px; background:#ccc; border-radius:50%; overflow:hidden;"><img src="https://picsum.photos/seed/${c.user}/32/32" style="width:100%; height:100%;"></div>
+                                        <div class="comment-body"><span style="font-weight:bold; font-size:0.85rem;">${c.user}</span><p style="font-size:0.9rem; margin-top:2px;">${c.text}</p></div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -862,113 +390,10 @@
             });
         }
 
-        function toggleLike(id) {
-            const post = posts.find(p => p.id === id);
-            if (post) {
-                post.liked = !post.liked;
-                post.likes = post.liked ? post.likes + 1 : post.likes - 1;
-                renderFeed();
-                // If comments were open, we lose that state here in this simple render. 
-                // In a real app with a framework like React, state is preserved.
-                showToast(post.liked ? "Upvoted!" : "Unvoted");
-            }
-        }
+        function toggleComments(id) { document.getElementById(`comments-${id}`).classList.toggle('open'); }
 
-        function toggleComments(id) {
-            const section = document.getElementById(`comments-${id}`);
-            section.classList.toggle('open');
-        }
-
-        function handleCommentEnter(e, id) {
-            if (e.key === 'Enter') {
-                const input = document.getElementById(`input-comment-${id}`);
-                const text = input.value.trim();
-                if (text) {
-                    const post = posts.find(p => p.id === id);
-                    post.comments.push({ user: currentUser.name, text: text });
-                    input.value = '';
-                    renderFeed();
-                    // Re-open comments after render
-                    setTimeout(() => {
-                         const section = document.getElementById(`comments-${id}`);
-                         section.classList.add('open');
-                    }, 0);
-                    showToast("Comment posted");
-                }
-            }
-        }
-
-        // --- POST CREATION ---
-        function setupInputListeners() {
-            postInput.addEventListener('input', () => {
-                if (postInput.value.trim().length > 0 || currentImageFile) {
-                    submitPostBtn.classList.add('active');
-                } else {
-                    submitPostBtn.classList.remove('active');
-                }
-            });
-
-            document.getElementById('imageUpload').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        currentImageFile = evt.target.result;
-                        const previewContainer = document.getElementById('imagePreviewContainer');
-                        const preview = document.getElementById('imagePreview');
-                        preview.src = currentImageFile;
-                        previewContainer.style.display = 'block';
-                        submitPostBtn.classList.add('active');
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        function focusPostInput() {
-            postInput.focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function triggerImageUpload() {
-            document.getElementById('imageUpload').click();
-        }
-
-        function removeImage() {
-            currentImageFile = null;
-            document.getElementById('imagePreviewContainer').style.display = 'none';
-            document.getElementById('imageUpload').value = '';
-            if(postInput.value.trim().length === 0) {
-                submitPostBtn.classList.remove('active');
-            }
-        }
-
-        function createPost() {
-            const content = postInput.value.trim();
-            if (!content && !currentImageFile) return;
-
-            const newPost = {
-                id: Date.now(),
-                user: currentUser.name,
-                avatar: currentUser.avatar,
-                community: "u/" + currentUser.name,
-                time: "Just now",
-                content: content,
-                image: currentImageFile,
-                likes: 0,
-                comments: [],
-                liked: false
-            };
-
-            posts.unshift(newPost);
-            postInput.value = '';
-            removeImage();
-            renderFeed();
-            showToast("Post created successfully!");
-        }
-
-        // --- CHAT FUNCTIONS ---
         function renderChatList() {
+            const chatListEl = document.getElementById('chatList');
             chatListEl.innerHTML = '';
             chatContacts.forEach(contact => {
                 const el = document.createElement('div');
@@ -976,10 +401,7 @@
                 el.onclick = () => openChat(contact.id);
                 el.innerHTML = `
                     <img src="${contact.avatar}" class="avatar-small">
-                    <div class="chat-info">
-                        <div class="chat-name">${contact.name}</div>
-                        <div class="chat-last-msg">${contact.lastMsg}</div>
-                    </div>
+                    <div class="chat-info"><div class="chat-name">${contact.name}</div><div class="chat-last-msg">${contact.lastMsg}</div></div>
                 `;
                 chatListEl.appendChild(el);
             });
@@ -988,77 +410,53 @@
         function openChat(id) {
             activeChatId = id;
             const contact = chatContacts.find(c => c.id === id);
-            
-            cwName.innerText = contact.name;
-            cwAvatar.src = contact.avatar;
-            
+            document.getElementById('cwName').innerText = contact.name;
+            document.getElementById('cwAvatar').src = contact.avatar;
             renderMessages(contact.messages);
-            
-            chatWindow.classList.add('open');
-            renderChatList(); // update active state highlight
-        }
-
-        function closeChat() {
-            chatWindow.classList.remove('open');
-            activeChatId = null;
+            document.getElementById('chatWindow').classList.add('open');
             renderChatList();
         }
 
+        function closeChat() { document.getElementById('chatWindow').classList.remove('open'); activeChatId = null; renderChatList(); }
+
         function renderMessages(messages) {
+            const cwMessages = document.getElementById('cwMessages');
             cwMessages.innerHTML = '';
             messages.forEach(msg => {
-                const isMe = msg.from === "Me";
                 const div = document.createElement('div');
-                div.className = `message ${isMe ? 'msg-out' : 'msg-in'}`;
+                div.className = `message ${msg.from === "Me" ? 'msg-out' : 'msg-in'}`;
                 div.innerText = msg.text;
                 cwMessages.appendChild(div);
             });
             cwMessages.scrollTop = cwMessages.scrollHeight;
         }
 
-        function sendMessage() {
-            const text = cwInput.value.trim();
-            if (!text || !activeChatId) return;
-
-            const contact = chatContacts.find(c => c.id === activeChatId);
-            
-            // Add message
-            contact.messages.push({ from: "Me", text: text });
-            contact.lastMsg = "You: " + text;
-            
-            // Clear input & Render
-            cwInput.value = '';
-            renderMessages(contact.messages);
-            renderChatList();
-
-            // Simulate reply
-            setTimeout(() => {
-                contact.messages.push({ from: contact.name, text: "Got it, thanks!" });
-                contact.lastMsg = "Got it, thanks!";
-                if(activeChatId === contact.id) {
-                    renderMessages(contact.messages);
-                }
-                renderChatList();
-            }, 1500);
+        function setupInputListeners() {
+            const input = document.getElementById('mainPostInput');
+            const btn = document.getElementById('submitPostBtn');
+            input.addEventListener('input', () => {
+                if(input.value.trim().length > 0) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
         }
 
-        // --- UTILITIES ---
-        function formatContent(text) {
-            // Simple markdown-ish replacement
-            return text.replace(/\n/g, '<br>');
-        }
+        function focusPostInput() { document.getElementById('mainPostInput').focus(); }
 
-        function showToast(message) {
-            toast.innerText = message;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Start App
-        init();
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            if(document.body.getAttribute('data-theme') === 'dark') document.body.removeAttribute('data-theme');
+            else document.body.setAttribute('data-theme', 'dark');
+        });
 
+        // Start
+        init();
     </script>
 </body>
 </html>
