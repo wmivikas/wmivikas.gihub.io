@@ -3,65 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threadit - Realtime Social</title>
+    <title>Threadit - Full Cloud Version</title>
     <style>
+        /* --- CSS STYLES --- */
         :root {
-            --primary-color: #ff4500; --secondary-color: #1a1a1b; --background-color: #dae0e6;
-            --card-bg: #ffffff; --text-main: #1c1c1c; --text-muted: #7c7c7c; --border-color: #ccc;
+            --primary-color: #ff4500;
+            --secondary-color: #1a1a1b;
+            --background-color: #dae0e6;
+            --card-bg: #ffffff;
+            --text-main: #1c1c1c;
+            --text-muted: #7c7c7c;
+            --border-color: #ccc;
+            --blue-accent: #7193ff;
             --chat-bg: #f0f2f5;
         }
+
         [data-theme="dark"] {
-            --primary-color: #ff4500; --secondary-color: #030303; --background-color: #1a1a1b;
-            --card-bg: #1a1a1b; --text-main: #d7dadc; --text-muted: #818384; --border-color: #343536;
+            --primary-color: #ff4500;
+            --secondary-color: #030303;
+            --background-color: #1a1a1b;
+            --card-bg: #1a1a1b;
+            --text-main: #d7dadc;
+            --text-muted: #818384;
+            --border-color: #343536;
             --chat-bg: #1a1a1b;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--background-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
-        .app-container { display: grid; grid-template-columns: 240px 1fr 300px; gap: 24px; max-width: 1280px; width: 100%; padding-top: 20px; }
-        @media (max-width: 1024px) { .app-container { grid-template-columns: 1fr; } .chat-sidebar, .left-sidebar { display: none; } }
-        
-        /* UI Elements */
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 240px 1fr 300px;
+            gap: 24px;
+            max-width: 1280px;
+            width: 100%;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 1024px) { .app-container { grid-template-columns: 200px 1fr; } .chat-sidebar { display: none; } }
+        @media (max-width: 768px) { .app-container { grid-template-columns: 1fr; padding: 10px; gap: 10px; } .left-sidebar { display: none; } }
+
+        /* Sidebar */
         .left-sidebar { position: sticky; top: 20px; height: fit-content; padding: 12px; }
-        .nav-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 4px; }
+        .nav-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; font-weight: 500; margin-bottom: 4px; }
         .nav-item:hover { background-color: rgba(0,0,0,0.05); }
-        .create-post-btn { background-color: var(--primary-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 99px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+        [data-theme="dark"] .nav-item:hover { background-color: rgba(255,255,255,0.1); }
+
+        .create-post-btn {
+            background-color: var(--primary-color); color: white; border: none; width: 100%;
+            padding: 12px; border-radius: 99px; font-weight: bold; cursor: pointer;
+            margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* Feed */
         .main-feed { display: flex; flex-direction: column; gap: 16px; }
+
         .create-post-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; gap: 12px; }
         .avatar-small { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+        .post-input-area { flex: 1; }
         .post-textarea { width: 100%; border: none; background: transparent; resize: none; font-size: 1.1rem; outline: none; color: var(--text-main); min-height: 50px; }
-        .post-actions { display: flex; justify-content: flex-end; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+        
+        .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+        .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px; font-size: 0.9rem; }
+        .icon-btn:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .icon-btn:hover { background-color: rgba(255,255,255,0.1); }
         .post-btn { background-color: var(--primary-color); color: white; border: none; padding: 6px 16px; border-radius: 99px; font-weight: bold; cursor: pointer; opacity: 0.5; pointer-events: none; transition: 0.2s; }
         .post-btn.active { opacity: 1; pointer-events: all; }
-        
-        .post { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; gap: 12px; animation: fadeIn 0.4s; }
+
+        /* Post */
+        .post { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; gap: 12px; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .vote-column { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 40px; }
-        .vote-arrow { cursor: pointer; font-size: 1.2rem; color: var(--text-muted); }
+        .vote-arrow { cursor: pointer; font-size: 1.2rem; color: var(--text-muted); transition: color 0.2s; }
+        .vote-arrow:hover { color: var(--text-main); }
         .vote-arrow.upvoted { color: var(--primary-color); }
+        .vote-count { font-weight: bold; font-size: 0.9rem; }
+
         .post-content { flex: 1; }
         .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 0.9rem; }
         .username { font-weight: bold; color: var(--text-main); }
         .community { color: var(--text-muted); }
         .post-text { margin-bottom: 12px; line-height: 1.5; word-break: break-word; }
-        .post-footer { display: flex; gap: 16px; }
-        .footer-action { display: flex; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 6px; border-radius: 4px; }
-        .footer-action:hover { background-color: rgba(0,0,0,0.05); }
+        .post-image { width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
 
-        /* Chat */
+        .post-footer { display: flex; gap: 16px; }
+        .footer-action { display: flex; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-weight: 500; padding: 6px; border-radius: 4px; }
+        .footer-action:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .footer-action:hover { background-color: rgba(255,255,255,0.1); }
+
+        /* Comments */
+        .comments-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); display: none; }
+        .comments-section.open { display: block; }
+        .comment-input-wrapper { display: flex; gap: 10px; margin-bottom: 16px; }
+        .comment-input { flex: 1; border: 1px solid var(--border-color); background: var(--background-color); color: var(--text-main); padding: 8px 12px; border-radius: 8px; outline: none; }
+        .comment { display: flex; gap: 10px; margin-bottom: 12px; }
+        .comment-body { background: rgba(0,0,0,0.03); padding: 8px 12px; border-radius: 8px; flex: 1; }
+        [data-theme="dark"] .comment-body { background: rgba(255,255,255,0.05); }
+
+        /* Chat Sidebar */
         .chat-sidebar { position: sticky; top: 20px; height: calc(100vh - 40px); background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
-        .chat-header { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; }
+        .chat-header { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .chat-list { flex: 1; overflow-y: auto; }
-        .chat-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .chat-item:hover { background-color: rgba(0,0,0,0.05); }
+        .chat-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; }
+        .chat-item:hover, .chat-item.active { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .chat-item:hover, [data-theme="dark"] .chat-item.active { background-color: rgba(255,255,255,0.05); }
         .chat-info { flex: 1; overflow: hidden; }
+        .chat-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
         .chat-last-msg { color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Toast */
+        /* Chat Window */
+        .chat-window {
+            position: fixed; bottom: 20px; right: 20px; width: 350px; height: 500px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+            z-index: 1000; transform: translateY(110%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chat-window.open { transform: translateY(0); }
+        .cw-header { padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: var(--primary-color); color: white; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0; }
+        .cw-close { cursor: pointer; font-size: 1.2rem; }
+        .cw-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--chat-bg); }
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; }
+        .msg-in { align-self: flex-start; background: #e4e6eb; color: #050505; border-bottom-left-radius: 2px; }
+        [data-theme="dark"] .msg-in { background: #3a3b3c; color: white; }
+        .msg-out { align-self: flex-end; background: var(--primary-color); color: white; border-bottom-right-radius: 2px; }
+        .cw-input-area { padding: 12px; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
+        .cw-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--border-color); outline: none; background: var(--background-color); color: var(--text-main); }
+        .cw-send { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary-color); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* Toast & Toggle */
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: white; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 50%; cursor: pointer; z-index: 100; }
     </style>
 </head>
 <body>
+
+    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
 
     <div class="app-container">
         <!-- LEFT SIDEBAR -->
@@ -69,15 +158,31 @@
             <button class="create-post-btn" onclick="focusPostInput()"><span>+</span> Create Post</button>
             <div class="nav-item">Home</div>
             <div class="nav-item">Popular</div>
+            <div style="margin-top: 20px; padding: 0 12px; font-size: 0.75rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Communities</div>
+            <div class="nav-item">Technology</div>
+            <div class="nav-item">Gaming</div>
         </nav>
 
         <!-- MAIN FEED -->
         <main class="main-feed">
             <div class="create-post-card">
-                <img src="https://picsum.photos/seed/me/50/50" class="avatar-small">
-                <div class="post-input-area" style="flex:1;">
+                <img id="currentUserAvatar" src="" class="avatar-small">
+                <div class="post-input-area">
                     <textarea id="mainPostInput" class="post-textarea" placeholder="What's on your mind?"></textarea>
+                    
+                    <div id="imagePreviewContainer" style="display:none; margin-bottom:10px; position:relative;">
+                        <img id="imagePreview" src="" style="max-height: 200px; border-radius: 8px;">
+                        <button onclick="removeImage()" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;">&times;</button>
+                    </div>
+
                     <div class="post-actions">
+                        <div class="action-btns">
+                            <button class="icon-btn" onclick="triggerImageUpload()" title="Add Image">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                Media
+                            </button>
+                            <input type="file" id="imageUpload" hidden accept="image/*">
+                        </div>
                         <button id="submitPostBtn" class="post-btn" onclick="createPost()">Post</button>
                     </div>
                 </div>
@@ -87,30 +192,61 @@
 
         <!-- RIGHT SIDEBAR -->
         <aside class="chat-sidebar">
-            <div class="chat-header">Chats</div>
+            <div class="chat-header"><span>Chats</span></div>
             <div class="chat-list" id="chatList"></div>
         </aside>
     </div>
 
-    <div id="toast" class="toast">Updated!</div>
+    <!-- CHAT WINDOW -->
+    <div class="chat-window" id="chatWindow">
+        <div class="cw-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <img id="cwAvatar" src="" class="avatar-small" style="border: 1px solid white;">
+                <div id="cwName">User</div>
+            </div>
+            <span class="cw-close" onclick="closeChat()">&times;</span>
+        </div>
+        <div class="cw-messages" id="cwMessages"></div>
+        <div class="cw-input-area">
+            <input type="text" id="cwInput" class="cw-input" placeholder="Aa">
+            <button class="cw-send" onclick="sendMessage()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action Successful</div>
 
     <script>
         // ==========================================
-        // CONFIGURATION: PUT YOUR KEYS HERE!!!
+        // CONFIGURATION
         // ==========================================
-        const BIN_ID = "69551f12d0ea881f404ba84b";     // <--- PASTE YOUR BIN ID HERE
-        const API_KEY = "$2a$10$KkbkUgKdcqhiRuWhhBzzG.9MP55.CcR2U4EcMQr6r1Q8.sFLNdBhe";   // <--- PASTE YOUR API KEY HERE
-        
+        const BIN_ID = "69551f12d0ea881f404ba84b";     // <--- PASTE YOUR BIN ID HERE 
+        const API_KEY = "$2a$10$KkbkUgKdcqhiRuWhhBzzG.9MP55.CcR2U4EcMQr6r1Q8.sFLNdBhe";
         const BASE_URL = "https://api.jsonbin.io/v3/b";
-
-        // ==========================================
-        // APP LOGIC
-        // ==========================================
         
+        // Random Identity Generator
+        const randomNames = ["Alex", "Jordan", "Taylor", "Casey", "Morgan", "Riley", "Jamie", "Quinn", "Avery", "Skyler"];
+        const randomAvatars = [
+            "https://i.pravatar.cc/150?u=1", "https://i.pravatar.cc/150?u=2", "https://i.pravatar.cc/150?u=3",
+            "https://i.pravatar.cc/150?u=4", "https://i.pravatar.cc/150?u=5", "https://i.pravatar.cc/150?u=6"
+        ];
+
+        // Global State
         let posts = [];
         let chatContacts = [];
+        let activeChatId = null;
+        let currentImageFile = null; // Base64 string
+        
+        // Assign Random Identity on Load
+        let myRandomName = randomNames[Math.floor(Math.random() * randomNames.length)];
+        let myRandomAvatar = randomAvatars[Math.floor(Math.random() * randomAvatars.length)];
+        document.getElementById('currentUserAvatar').src = myRandomAvatar;
 
-        // --- 1. FETCH DATA FROM CLOUD ---
+        // ==========================================
+        // CLOUD LOGIC (JSONbin)
+        // ==========================================
+        
         async function fetchData() {
             try {
                 const response = await fetch(`${BASE_URL}/${BIN_ID}/latest`, {
@@ -118,27 +254,33 @@
                 });
                 const data = await response.json();
                 
-                // Update local state from cloud
-                if(data.record && data.record.posts) {
-                    posts = data.record.posts;
-                } else {
-                    // Default posts if empty
-                    posts = [
-                        { id: 1, user: "TechGuru", content: "Hello world from the cloud!", likes: 10, comments: [], liked: false },
-                        { id: 2, user: "Alice", content: "This is working perfectly.", likes: 5, comments: [], liked: true }
-                    ];
+                if(data.record) {
+                    posts = data.record.posts || [];
+                    chatContacts = data.record.chatContacts || [];
+                    
+                    // If contacts are empty, init defaults
+                    if(chatContacts.length === 0) initDefaultChats();
+                    
+                    renderFeed();
+                    renderChatList();
                 }
-                
-                renderFeed();
             } catch (error) {
-                console.error("Error loading data:", error);
-                alert("Could not load data. Check your API Keys.");
+                console.error("Fetch Error:", error);
+                // If empty or error, init defaults
+                if(posts.length === 0) {
+                    posts = [{id: 999, user: "System", content: "Welcome to the Cloud Threadit! Posts are synced.", likes: 100, comments: [], liked: false}];
+                    initDefaultChats();
+                    renderFeed();
+                    renderChatList();
+                }
             }
         }
 
-        // --- 2. SAVE DATA TO CLOUD ---
         async function saveData() {
-            const dataToSend = { posts: posts }; // Sending only posts for this demo
+            const dataToSend = { 
+                posts: posts, 
+                chatContacts: chatContacts 
+            };
             
             try {
                 await fetch(`${BASE_URL}/${BIN_ID}`, {
@@ -149,34 +291,44 @@
                     },
                     body: JSON.stringify(dataToSend)
                 });
-                console.log("Saved to cloud successfully");
             } catch (error) {
-                console.error("Error saving data:", error);
+                console.error("Save Error:", error);
             }
         }
 
-        // --- 3. CORE FUNCTIONS ---
+        function initDefaultChats() {
+            chatContacts = [
+                { id: 1, name: "Alice", avatar: "https://i.pravatar.cc/150?u=10", lastMsg: "Hey!", messages: [{ from: "Alice", text: "Hey!" }] },
+                { id: 2, name: "Bob", avatar: "https://i.pravatar.cc/150?u=11", lastMsg: "Did you see that?", messages: [{ from: "Bob", text: "Did you see that?" }] }
+            ];
+        }
+
+        // ==========================================
+        // POST LOGIC
+        // ==========================================
         function createPost() {
             const content = document.getElementById('mainPostInput').value.trim();
-            if (!content) return;
+            if (!content && !currentImageFile) return;
 
             const newPost = {
                 id: Date.now(),
-                user: "You",
-                avatar: "https://picsum.photos/seed/me/50/50",
-                community: "u/You",
+                user: myRandomName, // Use random name
+                avatar: myRandomAvatar,
+                community: "u/" + myRandomName,
                 time: "Just now",
                 content: content,
+                image: currentImageFile,
                 likes: 0,
                 comments: [],
                 liked: false
             };
 
-            posts.unshift(newPost);
+            posts.unshift(newPost); // Add to top
             document.getElementById('mainPostInput').value = '';
-            saveData(); // Send to cloud
+            removeImage();
+            saveData(); // Sync to cloud
             renderFeed();
-            showToast("Posted to Cloud!");
+            showToast("Posted!");
         }
 
         function toggleLike(id) {
@@ -184,12 +336,97 @@
             if (post) {
                 post.liked = !post.liked;
                 post.likes = post.liked ? post.likes + 1 : post.likes - 1;
-                saveData(); // Send to cloud
+                saveData();
                 renderFeed();
             }
         }
 
-        // --- 4. RENDERING ---
+        function handleCommentEnter(e, id) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-comment-${id}`);
+                const text = input.value.trim();
+                if (text) {
+                    const post = posts.find(p => p.id === id);
+                    post.comments.push({ user: myRandomName, text: text, avatar: myRandomAvatar });
+                    input.value = '';
+                    saveData();
+                    renderFeed();
+                    setTimeout(() => document.getElementById(`comments-${id}`).classList.add('open'), 0);
+                    showToast("Comment posted");
+                }
+            }
+        }
+
+        // Image Handling
+        function triggerImageUpload() { document.getElementById('imageUpload').click(); }
+        
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    currentImageFile = evt.target.result; // Base64
+                    document.getElementById('imagePreview').src = currentImageFile;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                    document.getElementById('submitPostBtn').classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function removeImage() {
+            currentImageFile = null;
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            document.getElementById('imageUpload').value = '';
+        }
+
+        // ==========================================
+        // CHAT LOGIC
+        // ==========================================
+        function sendMessage() {
+            const text = document.getElementById('cwInput').value.trim();
+            if (!text || !activeChatId) return;
+
+            const contact = chatContacts.find(c => c.id === activeChatId);
+            contact.messages.push({ from: "You", text: text, avatar: myRandomAvatar }); // Save user identity
+            contact.lastMsg = "You: " + text;
+            
+            document.getElementById('cwInput').value = '';
+            saveData();
+            renderMessages(contact.messages);
+            renderChatList();
+        }
+
+        function openChat(id) {
+            activeChatId = id;
+            const contact = chatContacts.find(c => c.id === id);
+            document.getElementById('cwName').innerText = contact.name;
+            document.getElementById('cwAvatar').src = contact.avatar;
+            renderMessages(contact.messages);
+            document.getElementById('chatWindow').classList.add('open');
+            renderChatList();
+        }
+
+        function closeChat() { document.getElementById('chatWindow').classList.remove('open'); activeChatId = null; renderChatList(); }
+
+        function renderMessages(messages) {
+            const cwMessages = document.getElementById('cwMessages');
+            cwMessages.innerHTML = '';
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                // Determine if message is mine
+                const isMe = msg.from === "You" || (msg.avatar === myRandomAvatar);
+                
+                div.className = `message ${isMe ? 'msg-out' : 'msg-in'}`;
+                div.innerText = msg.text;
+                cwMessages.appendChild(div);
+            });
+            cwMessages.scrollTop = cwMessages.scrollHeight;
+        }
+
+        // ==========================================
+        // RENDERING
+        // ==========================================
         function renderFeed() {
             const feedContainer = document.getElementById('feedContainer');
             feedContainer.innerHTML = '';
@@ -202,31 +439,68 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="${post.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
                         </div>
                         <div class="vote-count">${post.likes}</div>
+                        <div class="vote-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
                     </div>
                     <div class="post-content">
                         <div class="post-header">
-                            <img src="${post.avatar || 'https://picsum.photos/seed/me/50/50'}" class="avatar-small" style="width:24px; height:24px;">
+                            <img src="${post.avatar}" class="avatar-small" style="width:24px; height:24px;">
                             <span class="username">${post.user}</span>
-                            <span class="community">${post.community || 'r/General'}</span>
+                            <span class="community">${post.community}</span>
                         </div>
                         <div class="post-text">${post.content}</div>
+                        ${post.image ? `<img src="${post.image}" class="post-image">` : ''}
+                        <div class="post-footer">
+                            <div class="footer-action" onclick="toggleComments(${post.id})">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> ${post.comments.length} Comments
+                            </div>
+                        </div>
+                        <div class="comments-section" id="comments-${post.id}">
+                            <div class="comment-input-wrapper">
+                                <img src="${myRandomAvatar}" class="avatar-small">
+                                <input type="text" class="comment-input" placeholder="Add a comment..." id="input-comment-${post.id}" onkeypress="handleCommentEnter(event, ${post.id})">
+                            </div>
+                            <div id="comments-list-${post.id}">
+                                ${post.comments.map(c => `
+                                    <div class="comment">
+                                        <div style="width:32px; height:32px; background:#ccc; border-radius:50%; overflow:hidden;"><img src="${c.avatar}" style="width:100%; height:100%;"></div>
+                                        <div class="comment-body"><span style="font-weight:bold; font-size:0.85rem;">${c.user}</span><p style="font-size:0.9rem; margin-top:2px;">${c.text}</p></div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
                     </div>
                 `;
                 feedContainer.appendChild(postEl);
             });
         }
 
+        function toggleComments(id) { document.getElementById(`comments-${id}`).classList.toggle('open'); }
+
+        function renderChatList() {
+            const chatListEl = document.getElementById('chatList');
+            chatListEl.innerHTML = '';
+            chatContacts.forEach(contact => {
+                const el = document.createElement('div');
+                el.className = `chat-item ${activeChatId === contact.id ? 'active' : ''}`;
+                el.onclick = () => openChat(contact.id);
+                el.innerHTML = `
+                    <img src="${contact.avatar}" class="avatar-small">
+                    <div class="chat-info"><div class="chat-name">${contact.name}</div><div class="chat-last-msg">${contact.lastMsg}</div></div>
+                `;
+                chatListEl.appendChild(el);
+            });
+        }
+
+        // Utils
         function setupInputListeners() {
             const input = document.getElementById('mainPostInput');
             const btn = document.getElementById('submitPostBtn');
             input.addEventListener('input', () => {
-                if(input.value.trim().length > 0) btn.classList.add('active');
+                if(input.value.trim().length > 0 || currentImageFile) btn.classList.add('active');
                 else btn.classList.remove('active');
             });
         }
-
         function focusPostInput() { document.getElementById('mainPostInput').focus(); }
-
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
@@ -234,13 +508,16 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // --- 5. AUTO-REFRESH (Optional but cool) ---
-        // This checks the cloud every 5 seconds to see if someone else posted
-        setInterval(fetchData, 5000);
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            if(document.body.getAttribute('data-theme') === 'dark') document.body.removeAttribute('data-theme');
+            else document.body.setAttribute('data-theme', 'dark');
+        });
 
         // Start
         setupInputListeners();
-        fetchData(); // Load data on startup
+        fetchData(); // Load on start
+        setInterval(fetchData, 3000); // Auto refresh every 3 seconds
 
     </script>
 </body>
